@@ -1,6 +1,6 @@
 const { PrismaClient } = require("@prisma/client");
 const { hashPassword, validatePassword } = require("../helper/password.helper");
-const { generateJWT } = require("../helper/jwtHelper");
+const { generateJWT, jwtVerify } = require("../helper/jwtHelper");
 const _ = require("lodash");
 
 const prisma = new PrismaClient();
@@ -126,5 +126,28 @@ module.exports.signup = async (req, res) => {
     return res.status(500).send({
       message: "internal error occered",
     });
+  }
+};
+
+module.exports.refreshTokenHandler = async (req, res) => {
+  const refreshToken = req.cookies?.refreshToken;
+  if (!refreshToken) {
+    return res.status(401).send({ message: "refresh token missing" });
+  }
+
+  try {
+    const payload = jwtVerify(refreshToken);
+    const token = generateJWT(
+      {
+        ...payload,
+        tokenId: process.env.REFRESH_TOKEN_ID,
+        iat: Date.now(),
+        exp: process.env.JWT_EXPIRATION,
+      },
+      process.env.JWT_EXPIRATION
+    );
+    return res.status(200).send({ message: "new access token fetched", token });
+  } catch (error) {
+    return res.status(403).send({ message: "invalid refresh token" });
   }
 };
