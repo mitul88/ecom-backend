@@ -7,7 +7,7 @@ module.exports.createMeal = async (req, res) => {
     const meal = await prisma.menuItem.create({
       data: data,
     });
-    return res.status(201).send({ message: "meal created", menu: meal });
+    return res.status(201).send({ message: "meal created", data: meal });
   } catch (error) {
     console.log(error);
     return res.status(500).send({ message: "internal error occured" });
@@ -32,6 +32,7 @@ module.exports.getMeal = async (req, res) => {
         created_at: orderBy,
       },
     });
+    return res.status(200).send({ message: "menus fetched", data: menus });
   } catch (error) {
     console.log(error);
     return res.status(500).send({ message: "internal error occured" });
