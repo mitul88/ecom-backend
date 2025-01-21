@@ -6,6 +6,12 @@ const prisma = new PrismaClient();
 module.exports.login = async (req, res) => {};
 module.exports.signup = async (req, res) => {
   const data = req.body;
+  if (!data["email"] || !data["password"] || !data["name"] || !data["phone"]) {
+    return res.status(422).send({
+      status: false,
+      message: "Please fill up required information",
+    });
+  }
   try {
     const user = await prisma.user.findUnique({
       where: {
@@ -32,5 +38,8 @@ module.exports.signup = async (req, res) => {
     });
   } catch (err) {
     console.log(err);
+    return res.status(500).send({
+      message: "internal error occered",
+    });
   }
 };
