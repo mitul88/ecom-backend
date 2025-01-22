@@ -151,3 +151,8 @@ module.exports.refreshTokenHandler = async (req, res) => {
     return res.status(403).send({ message: "invalid refresh token" });
   }
 };
+
+module.exports.logout = async (req, res) => {
+  res.clearCookie("refreshToken", { httpOnly: true, secure: true });
+  return res.status(200).send({ message: "refresh token removed" });
+};
