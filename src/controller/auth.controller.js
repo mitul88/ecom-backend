@@ -42,7 +42,7 @@ module.exports.login = async (req, res) => {
 
     const refreshToken = generateJWT(
       {
-        ..._.pick(user, ["id", "name"]),
+        ..._.pick(user, ["id", "name", "email", "phone"]),
         tokenId: process.env.REFRESH_TOKEN_ID,
         iat: Date.now(),
         exp: process.env.REFRESH_TOKEN_EXPIRATION,
@@ -105,7 +105,7 @@ module.exports.signup = async (req, res) => {
 
     const refreshToken = generateJWT(
       {
-        ..._.pick(user, ["id", "name"]),
+        ..._.pick(user, ["id", "name", "email", "phone"]),
         tokenId: process.env.REFRESH_TOKEN_ID,
         iat: Date.now(),
         exp: process.env.REFRESH_TOKEN_EXPIRATION,
