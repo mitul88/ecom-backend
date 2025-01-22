@@ -17,6 +17,7 @@ module.exports.getMeal = async (req, res) => {
   const limit = req.query.limit || 10;
   const page = req.query.page || 1;
   const orderBy = req.query.orderBy || "desc";
+  const search = req.query?.search;
   try {
     const menus = await prisma.menuItem.findMany({
       select: {
@@ -26,6 +27,11 @@ module.exports.getMeal = async (req, res) => {
         price: true,
         created_at: true,
       },
+      where: search
+        ? {
+            OR: [{ name: { contains: search, mode: "insensitive" } }],
+          }
+        : {},
       take: parseInt(limit),
       skip: (page - 1) * limit,
       orderBy: {
