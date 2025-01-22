@@ -4,7 +4,7 @@ const cors = require("cors");
 module.exports = (app) => {
   app.use(
     cors({
-      origin: "https://ecom-frontend-azure.vercel.app",
+      origin: "*",
     })
   );
   app.use(express.json());
